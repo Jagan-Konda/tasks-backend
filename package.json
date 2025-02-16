@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "postinstall": "npm rebuild sqlite3 && npm rebuild bcrypt --build-from-source",
+    "postinstall": "npm rebuild sqlite3 && npm rebuild bcrypt --build-from-source"
   },
   "engines": {
     "node": "22.10.0"
