@@ -19,9 +19,6 @@ const allowedOrigins = ['http://localhost:3000', 'https://taskstracker459.netlif
 // CORS options
 const corsOptions = {
     origin: allowedOrigins, // Allow only specific origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    credentials: true, // Allow cookies or credentials (optional)
 };
 
 // Apply CORS to all routes
