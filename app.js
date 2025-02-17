@@ -14,7 +14,7 @@ const dbPath = path.join(__dirname, './tasksTracker.db')
 const app = express()
 app.use(express.json())
 
-const allowedOrigins = ['http://localhost:3000',];
+const allowedOrigins = ['http://localhost:3000', 'https://taskstracker459.netlify.app/login'];
 
 // CORS options
 const corsOptions = {
