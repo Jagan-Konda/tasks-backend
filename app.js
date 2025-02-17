@@ -14,7 +14,7 @@ const dbPath = path.join(__dirname, './tasksTracker.db')
 const app = express()
 app.use(express.json())
 
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000',];
 
 // CORS options
 const corsOptions = {
@@ -67,10 +67,10 @@ app.post("/signup", async (request, response) => {
           )`;
         const dbResponse = await db.run(createUserQuery);
         const newUserId = dbResponse.lastID;
-        response.send(`Created new user with ${newUserId}`);
+        response.status(201).json({ message: `Created new user with ID: ${newUserId}` });
+
     } else {
-        response.status = 400;
-        response.send("User already exists");
+        response.status(400).json({ error: "User already exists" });
     }
 });
 
@@ -86,8 +86,7 @@ app.post('/login', async (request, response) => {
     `
     const dbUser = await db.get(queryToCheckUser)
     if (dbUser === undefined) {
-        response.status(400)
-        response.send('Invalid user')
+        response.status(400).json({ error: 'Invalid user' });
     } else {
         const isPasswordMatched = await bcrypt.compare(password, dbUser.password)
         if (isPasswordMatched) {
@@ -98,8 +97,7 @@ app.post('/login', async (request, response) => {
             }
             response.send(jwtTokenObj)
         } else {
-            response.status(400)
-            response.send('Invalid password')
+            response.status(400).json({ error: 'Invalid password' });
         }
     }
 })
@@ -114,13 +112,11 @@ const authenticateToken = (request, response, next) => {
         jwtToken = authorization.split(' ')[1]
     }
     if (jwtToken === undefined) {
-        response.status(401)
-        response.send('Invalid JWT Token')
+        response.status(401).json({ error: 'Invalid JWT Token' });
     } else {
         jwt.verify(jwtToken, 'SECRET', async (error, payload) => {
             if (error) {
-                response.status(401)
-                response.send('Invalid JWT Token')
+                response.status(401).json({ error: 'Invalid JWT Token' });
             } else {
                 request.email = payload.email
                 next()
@@ -147,7 +143,7 @@ app.post('/tasks/', authenticateToken, async (request, response) => {
       VALUES ('${title}','${description}','${status}','${due_date}', ${userId.id});
     `
     await db.run(queryToPostATask)
-    response.send('Task Successfully Added')
+    response.status(200).json({ message: 'Task Successfully Added' });
 })
 
 //CHECKING Is Task Belongs To User
@@ -174,8 +170,8 @@ const checkingIsTaskBelongsToUser = async (request, response, next) => {
     )
 
     if (isTaskBelongsToUser === undefined) {
-        response.status(401)
-        response.send('Invalid Request')
+        response.status(401).json({ error: 'Invalid Request' });
+
     } else {
         next()
     }
@@ -230,7 +226,8 @@ app.get('/tasks/', authenticateToken, async (request, response) => {
     }
 
     const todosArray = await db.all(queryToGetTasksList)
-    response.send(todosArray)
+    response.status(200).json(todosArray);
+
 })
 
 //PUT A TASK API 
@@ -250,7 +247,8 @@ app.put('/tasks/:id', authenticateToken, checkingIsTaskBelongsToUser, async (req
       WHERE id = ${id};
     `
     await db.run(queryToUpdateATask)
-    response.send("Task Updated Successfully")
+    response.status(200).json({ message: 'Task Updated Successfully' });
+
 })
 
 //DELETE A Task API 
@@ -265,5 +263,5 @@ app.delete('/tasks/:id', authenticateToken, checkingIsTaskBelongsToUser, async (
     `
 
     await db.run(queryToDeleteATask)
-    response.send("Task Deleted Successfully!")
+    response.status(200).json({ message: 'Task Deleted Successfully!' });
 })
