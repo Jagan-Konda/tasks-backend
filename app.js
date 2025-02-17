@@ -8,6 +8,19 @@ const jwt = require('jsonwebtoken')
 
 const cors = require('cors')
 
+const allowedOrigins = ['http://localhost:3000'];
+
+// CORS options
+const corsOptions = {
+    origin: allowedOrigins, // Allow only specific origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true, // Allow cookies or credentials (optional)
+};
+
+// Apply CORS to all routes
+app.use(cors(corsOptions));
+
 
 const dbPath = path.join(__dirname, './tasksTracker.db')
 
