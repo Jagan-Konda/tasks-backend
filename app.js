@@ -95,7 +95,7 @@ app.post('/login', async (request, response) => {
             const jwtTokenObj = {
                 jwtToken: jwtToken,
             }
-            response.send(jwtTokenObj)
+            response.status(200).json(jwtTokenObj);
         } else {
             response.status(400).json({ error: 'Invalid password' });
         }
